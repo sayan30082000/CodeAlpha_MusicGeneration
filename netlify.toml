@@ -1,0 +1,9 @@
+# Netlify serves the browser version of the music generator (built by `python export_web.py`).
+[build]
+  publish = "web"
+
+[[headers]]
+  for = "/model.bin"
+  [headers.values]
+    Content-Type = "application/octet-stream"
+    Cache-Control = "public, max-age=86400"

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+# The exported training MIDI files can be re-created with `python prepare_data.py`
+data/midi/

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Music Generator</title>
+  <meta name="description" content="An LSTM trained on 365 Bach chorales composes new melodies in your browser. CodeAlpha AI Internship, Task 3.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <p class="eyebrow">CodeAlpha AI Internship &middot; Task 3</p>
+      <h1>AI Music Generator</h1>
+      <p class="lead">An LSTM neural network trained on 365 Bach chorales writes a brand-new melody every time you press <strong>Generate</strong>. It runs entirely in your browser.</p>
+    </header>
+
+    <section class="card controls" aria-label="Generation settings">
+      <label>
+        <span>Length <output id="length-value">160</output> notes</span>
+        <input id="length" type="range" min="48" max="320" step="16" value="160">
+      </label>
+      <label>
+        <span>Creativity (temperature) <output id="temp-value">1.0</output></span>
+        <input id="temperature" type="range" min="0.5" max="1.5" step="0.1" value="1.0">
+      </label>
+      <label>
+        <span>Tempo <output id="bpm-value">90</output> BPM</span>
+        <input id="bpm" type="range" min="60" max="150" step="5" value="90">
+      </label>
+    </section>
+
+    <div class="buttons">
+      <button id="generate" class="primary" type="button" disabled>Loading model…</button>
+      <button id="play" type="button" disabled>&#9654; Play</button>
+      <button id="download-midi" type="button" disabled>&#11015; MIDI</button>
+      <button id="download-wav" type="button" disabled>&#11015; WAV</button>
+    </div>
+
+    <section class="card roll-card">
+      <div class="roll-head">
+        <h2>Piano roll</h2>
+        <span id="info" class="muted">Press Generate to compose a melody.</span>
+      </div>
+      <div class="roll-wrap"><canvas id="roll" height="260" aria-label="Piano roll of the generated melody"></canvas></div>
+      <p class="tokens muted" id="tokens"></p>
+    </section>
+
+    <section class="card how">
+      <h2>How it works</h2>
+      <ol>
+        <li><strong>Data:</strong> 365 Bach chorales (MIDI) were turned into note tokens like <code>E5_1.0</code> (note E5 for one beat) with <em>music21</em>.</li>
+        <li><strong>Model:</strong> a 2-layer LSTM (256 units, ~980k weights) learned to predict the next note from the previous 32 — trained in PyTorch.</li>
+        <li><strong>Generation:</strong> it starts from a short phrase of a real chorale, then picks each next note from its predicted probabilities (top-8 sampling with a temperature).</li>
+        <li><strong>Sound:</strong> notes are played with the Web Audio API and can be saved as MIDI or WAV.</li>
+      </ol>
+      <p class="muted" id="model-stats"></p>
+    </section>
+
+    <footer class="muted">Python + PyTorch + music21 project, with this browser version of the same trained model. <a href="https://github.com/sayan30082000/CodeAlpha_MusicGeneration">Source on GitHub</a></footer>
+  </main>
+
+  <script src="lstm.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
